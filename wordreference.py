@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 
 URL = "https://www.wordreference.com"
+args = None
 
 wr_available_dictinoaries = (
 ("enar" , "English-Arabic"),
@@ -135,7 +136,7 @@ def print_translations(translations, colors=""):
                     print("\033[91m" + " \u2022 " + "\033[00m" + examples_list[example])
                 else:
                     print("\033[93m   " + examples_list[example] + "\033[00m")
-        print('_' * 80)
+        print('_' * args.separator_length)
 
 def print_examples(translations):
     for value in translations.values():
@@ -158,11 +159,13 @@ def parse_arguments():
     parser.add_argument("-l", "--list-available-dictionaries", help = " list available dictionaries and their codes", action = list_dict_codes)
     parser.add_argument("-a", "--audio", help = "download audio files to current directory (when available)", action='store_true')
     parser.add_argument("-s", "--sentences", help = "get only example sentences and their meaning (when available)", action='store_true')
+    parser.add_argument("-e", "--separator-length", help = "Length of separator between entries", type=int, default=80)
     parser.add_argument("word", help = "word to translate")
     args = parser.parse_args()
     return args
 
 def main():
+    global args
     args = parse_arguments()
     translations,audio_links = define_word(args.word, args.dictionary_code)
     if args.sentences:
